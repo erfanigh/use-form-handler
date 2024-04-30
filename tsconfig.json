@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "lib": ["dom", "es2015", "es2017", "esnext.asynciterable"],
+      "jsx": "react",
+      "strict": false,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "node",
+      "declaration": true,
+      "outDir": "./dist",
+      "rootDir": "./lib"
+    },
+    "include": ["lib"],
+    "exclude": ["node_modules", "dist"]
+  }
+  

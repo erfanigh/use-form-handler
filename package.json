@@ -1,6 +1,6 @@
 {
   "name": "@erfangharib/use-form-handler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "easily validate your form and display errors",
   "main": "dist/index.js",
   "scripts": {

@@ -15,7 +15,7 @@ export class FormHandler {
     }
 
     isFormValuesValid(): boolean {
-        const inputValues: Array<[string, HTMLFormElement]> = Object.entries(this.form);
+        const inputValues: Array<[string, HTMLInputElement]> = Object.entries(this.form);
         const errArray: boolean[] = [];
     
         inputValues.forEach(([_, element], index) => {
@@ -29,7 +29,11 @@ export class FormHandler {
             if(!isErrElement) {
                 const errNode = document.createElement('p');
                 errNode.classList.add('err');
-                this.form.insertBefore(errNode, nextElement);
+
+                if(nextElement?.parentNode === element?.parentNode)
+                    this.form.insertBefore(errNode, nextElement);
+                else 
+                    element.parentElement.appendChild(errNode);
     
                 nextElement  = errNode;
                 isErrElement = true;

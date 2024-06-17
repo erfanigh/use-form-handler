@@ -97,6 +97,9 @@ export class FormHandler {
 
         const _isFormValuesValid = this.isFormValuesValid();
         
+        if('onSubmit' in this.options)
+            this.options?.onSubmit(this.data, this.form);
+
         if (_isFormValuesValid) {
             await axios?.[method](
                 this.options.endPoint,
@@ -116,7 +119,7 @@ export class FormHandler {
                     allErr[allErr.length - 1].innerHTML =
                         data?.['title'] ?? data?.['errors'] ?? reason.message;
 
-                    console.log(reason);
+                    console.error(reason);
 
                     if('onFailure' in this.options)
                         this.options?.onFailure(reason, this.form);

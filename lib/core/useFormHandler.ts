@@ -11,7 +11,7 @@ export type T_useFormHandlerOptions = {
     axiosConfigs?: AxiosRequestConfig;
     onSuccess?: (response: AxiosResponse, form: HTMLFormElement, data: FormData) => void;
     onFailure?: (reason: any, form: HTMLFormElement) => void;
-    onSubmit?: (response: AxiosResponse, formData: FormData, form: HTMLFormElement) => void;
+    onSubmit?: (formData: FormData, form: HTMLFormElement) => void;
     onValidationError?: (reason: string) => void;
 }
 

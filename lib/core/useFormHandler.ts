@@ -1,9 +1,10 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as Yup from 'yup';
 import { FormHandler } from '../utils/formHandler';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 
 export type T_YupSchema = { [key: string]: Yup.StringSchema };
+export type T_LoadingFn = React.Dispatch<React.SetStateAction<boolean>>
 export type T_Send = (e: FormEvent<HTMLFormElement>, method?: 'put' | 'post') => void;
 export type T_useFormHandlerOptions = {
     endPoint: string;
@@ -16,7 +17,11 @@ export type T_useFormHandlerOptions = {
 }
 
 const useFormHandler = (options: T_useFormHandlerOptions) => {
-    return { send: new FormHandler(options).send };
+    const [loading, setLoading] = useState<boolean>(false);
+    return { 
+        send: new FormHandler(options, setLoading).send, 
+        loading 
+    };
 }
 
 export default useFormHandler;

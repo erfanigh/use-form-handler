@@ -1,17 +1,19 @@
 import axios from 'axios';
-import { T_Send, T_useFormHandlerOptions } from '../core/useFormHandler';
+import { T_LoadingFn, T_Send, T_useFormHandlerOptions } from '../core/useFormHandler';
 
 export class FormHandler {
     expectedInputElements: string[];
     data: FormData;
     form: HTMLFormElement;
     options: T_useFormHandlerOptions;
+    setLoading: T_LoadingFn;
     
-    constructor(options: T_useFormHandlerOptions) {
+    constructor(options: T_useFormHandlerOptions, setLoading: T_LoadingFn) {
         this.expectedInputElements = ['INPUT', 'TEXTAREA', 'CHECKBOX', 'SELECT'];
         this.data = new FormData();
         this.form = undefined;
         this.options = options;
+        this.setLoading = setLoading;
     }
 
     isFormValuesValid(): boolean {
@@ -55,7 +57,8 @@ export class FormHandler {
             }
             catch (err) {
                 errArray[index] = true;
-    
+                
+                this.setLoading(false);
                 this.disableSubmitBtn(false);
 
                 if(typeof this.options.onValidationError === 'function')
@@ -94,6 +97,7 @@ export class FormHandler {
         this.data = new FormData();
 
         this.disableSubmitBtn();
+        this.setLoading(true);
 
         const _isFormValuesValid = this.isFormValuesValid();
         
@@ -101,14 +105,16 @@ export class FormHandler {
             this.options?.onSubmit(this.data, this.form);
 
         if (_isFormValuesValid) {
-            await axios?.[method](
+            axios?.[method](
                 this.options.endPoint,
                 this.data,
                 this.options.axiosConfigs ?? {}
             )
                 .then((res) => {
                     if('onSuccess' in this.options)
-                        this.options?.onSuccess(res, this.form, this.data)
+                        this.options?.onSuccess(res, this.form, this.data);
+
+                    this.setLoading(false);
                 })
                 .catch((reason) => {
                     // add response error to last p.err element in form
@@ -123,7 +129,11 @@ export class FormHandler {
 
                     if('onFailure' in this.options)
                         this.options?.onFailure(reason, this.form);
+
                     this.disableSubmitBtn(false);
+                })
+                .finally(() => {
+                    this.setLoading(false);
                 })
         }
         else this.disableSubmitBtn(false);

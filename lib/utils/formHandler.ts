@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { T_LoadingFn, T_Send, T_useFormHandlerOptions } from '../core/useFormHandler';
+import { T_Send, T_useFormHandlerOptions } from '../core/useFormHandler';
+
+type T_LoadingFn = React.Dispatch<React.SetStateAction<boolean>>
 
 export class FormHandler {
     expectedInputElements: string[];
@@ -102,7 +104,7 @@ export class FormHandler {
         const _isFormValuesValid = this.isFormValuesValid();
         
         if('onSubmit' in this.options)
-            this.options?.onSubmit(this.data, this.form);
+            this.options?.onSubmit(this.form, this.data);
 
         if (_isFormValuesValid) {
             axios?.[method](

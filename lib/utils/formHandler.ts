@@ -1,18 +1,19 @@
 import axios from 'axios';
-import { T_Send, T_useFormHandlerOptions } from '../core/useFormHandler';
+import { T_Data, T_ExpectedInputElements, T_Send, T_useFormHandlerOptions } from '../core/useFormHandler';
+import { convertDataTypes } from './convertDataTypes';
 
 type T_LoadingFn = React.Dispatch<React.SetStateAction<boolean>>
 
 export class FormHandler {
-    expectedInputElements: string[];
-    data: FormData;
+    expectedInputElements: T_ExpectedInputElements[];
+    data: T_Data;
     form: HTMLFormElement;
     options: T_useFormHandlerOptions;
     setLoading: T_LoadingFn;
     
     constructor(options: T_useFormHandlerOptions, setLoading: T_LoadingFn) {
         this.expectedInputElements = ['INPUT', 'TEXTAREA', 'CHECKBOX', 'SELECT'];
-        this.data = new FormData();
+        this.data = null;
         this.form = undefined;
         this.options = options;
         this.setLoading = setLoading;
@@ -46,14 +47,26 @@ export class FormHandler {
             }
     
             try {
-                currentValidationSchema?.validateSync(element?.value);
+                const value = convertDataTypes(
+                    element?.type.toLowerCase() === 'checkbox' 
+                    ? element?.checked.toString()
+                    : element?.value
+                )
+
+                currentValidationSchema?.validateSync(value);
                 errArray[index] = false;
-                this.data.append(
-                    element?.name,
-                    element?.files?.length >= 1
-                        ? element?.files[0]
-                        : element?.value.trim()
-                );
+
+                if(this.options.sendAsJson) {
+                    this.data[element?.name] = value;
+                }
+                else {
+                    this.data.append(
+                        element?.name,
+                        element?.files?.length >= 1
+                            ? element?.files[0]
+                            : value
+                    );
+                }
     
                 if (isErrElement) nextElement.innerHTML = '';
             }
@@ -96,7 +109,7 @@ export class FormHandler {
         if (e.type !== 'submit') return;
 
         this.form = e.target as HTMLFormElement;
-        this.data = new FormData();
+        this.data = this.options.sendAsJson ? {} : new FormData();
 
         this.disableSubmitBtn();
         this.setLoading(true);
@@ -131,10 +144,9 @@ export class FormHandler {
 
                     if('onFailure' in this.options)
                         this.options?.onFailure(reason, this.form);
-
-                    this.disableSubmitBtn(false);
                 })
                 .finally(() => {
+                    this.disableSubmitBtn(false);
                     this.setLoading(false);
                 })
         }

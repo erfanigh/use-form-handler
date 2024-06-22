@@ -3,7 +3,14 @@ import * as Yup from 'yup';
 import { FormHandler } from '../utils/formHandler';
 import { FormEvent, useState } from 'react';
 
-export type T_YupSchema = { [key: string]: Yup.StringSchema };
+export type T_Data = { [key: string]: any } | FormData;
+export type T_ExpectedInputElements = 'INPUT' | 'TEXTAREA' | 'CHECKBOX' | 'SELECT';
+export type T_YupSchema = { 
+    [key: string]: 
+        | Yup.StringSchema
+        | Yup.NumberSchema
+        | Yup.BooleanSchema
+};
 export type T_Send = (e: FormEvent<HTMLFormElement>, method?: 'put' | 'post') => void;
 export type T_useFormHandlerOptions = {
     /**
@@ -18,10 +25,10 @@ export type T_useFormHandlerOptions = {
      * 
      * ### Example
      * ```
-     * validationSchema: Yup.object({
+     * validationSchema: {
         * name: Yup.string().required(),
         * email: Yup.string().email().required(), 
-     * })
+     * }
      * ```
      */
     validationSchema: T_YupSchema;
@@ -30,9 +37,14 @@ export type T_useFormHandlerOptions = {
      */
     axiosConfigs?: AxiosRequestConfig;
     /**
+     * Indicates whether the form data should be sent as JSON. 
+     * Defaults to ```true```. If set to ```false```, the data will be sent as ```application/x-www-form-urlencoded``` (FormData)
+     */
+    sendAsJson?: boolean;
+    /**
      * Callback function executed upon a successful form submission.
      */
-    onSuccess?: (response: AxiosResponse, form: HTMLFormElement, data: FormData) => void;
+    onSuccess?: (response: AxiosResponse, form: HTMLFormElement, data: T_Data) => void;
     /**
      * Callback function executed if the form submission fails
      */
@@ -40,7 +52,7 @@ export type T_useFormHandlerOptions = {
     /**
      * Callback function triggered immediately after form submission.
      */
-    onSubmit?: (form: HTMLFormElement, data: FormData) => void;
+    onSubmit?: (form: HTMLFormElement, data: T_Data) => void;
     /**
      * Callback function triggered when the form data fails validation according to the defined ```validationSchema```
      */

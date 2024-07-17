@@ -1,6 +1,6 @@
 {
-  "name": "@erfangharib/use-form-handler",
-  "version": "1.0.1",
+  "name": "@erfanigh/use-form-handler",
+  "version": "1.1.0",
   "description": "easily validate your form and display errors",
   "main": "dist/index.js",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/erfanGharib/use-form-handler.git"
+    "url": "git+https://github.com/erfanigh/use-form-handler.git"
   },
-  "author": "erfanGharib",
+  "author": "erfanigh",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/erfanGharib/use-form-handler/issues"
+    "url": "https://github.com/erfanigh/use-form-handler/issues"
   },
-  "homepage": "https://github.com/erfanGharib/use-form-handler#readme",
+  "homepage": "https://github.com/erfanigh/use-form-handler#readme",
   "dependencies": {
     "axios": "^1.6.8",
     "yup": "^1.4.0"

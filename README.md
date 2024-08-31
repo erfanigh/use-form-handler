@@ -61,7 +61,7 @@ Callback function triggered immediately after form submission.
 Callback function triggered when the form data fails validation according to the defined ```validationSchema```
 
 ## Usage
-```ts
+```tsx
 // 1. Define Yup Schema
 const validationSchema = {
     username: Yup.string().required().max(50),
